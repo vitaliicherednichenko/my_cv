@@ -1,0 +1,121 @@
+<div class="container">
+  <div class="row min-vh-100">
+
+    <div class="text-center text-white text-uppercase py-5 bg-dark">
+      <h1 class="mb-3"><%= @profile.full_name %></h1>
+      <h2><%= @profile.title %></h2>
+    </div>
+
+    <!-- LEFT SIDEBAR -->
+    <div class="col-md-4 text-white left-sidebar">
+
+      <h3 class="text-uppercase mt-5">Contact</h3>
+      <hr class="bg-light" style="height: 5px;">
+      <div>
+        <p><i class="bi bi-telephone"></i> &nbsp; <%= @profile.phone %></p>
+        <p><i class="bi bi-envelope-open"></i> &nbsp; <%= @profile.email %></p>
+        <p><i class="bi bi-pin-map"></i> &nbsp; <%= @profile.location %></p>
+        <p><i class="bi bi-github"></i> &nbsp; <%= @profile.github_url %></p>
+        <p><i class="bi bi-linkedin"></i> &nbsp; <%= @profile.linkedin_url %></p>
+      </div>
+
+      <!-- PROFILE -->
+      <h3 class="text-uppercase mt-5">Profile</h3>
+      <hr class="bg-light" style="height: 5px;">
+
+      <p><%= @profile.summary %></p>
+
+      <!-- SKILLS -->
+      <h3 class="text-uppercase mt-5">Skills</h3>
+      <hr class="bg-light" style="height: 5px;">
+
+      <% @skills.each do |skill| %>
+        <div class="mb-2">
+          <small><%= skill.name %></small>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-light" style="width: <%= skill.level %>%"></div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- LANGUAGES -->
+      <h3 class="text-uppercase mt-5">Languages</h3>
+      <hr class="bg-light" style="height: 5px;">
+
+      <% @languages.each do |lang| %>
+        <p><%= lang.name %> — <%= lang.level %></p>
+      <% end %>
+
+      <!-- EDUCATION -->
+      <h3 class="text-uppercase mt-5">Education</h3>
+      <hr class="bg-light" style="height: 5px;">
+
+      <% @educations.each do |edu| %>
+        <p>
+          <strong><%= edu.institution %></strong><br>
+          <%= edu.degree %> — <%= edu.location %><br>
+          <small>
+            <%= edu.start_date.year %> - <%= edu.end_date.year %>
+          </small>
+        </p>
+      <% end %>
+
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="col-md-8 p-5 pt-4">
+
+      <!-- EXPERIENCE -->
+      <h3 class="text-white text-uppercase p-4 bg-dark">Experience</h3>
+
+      <% @experiences.each do |exp| %>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-1">
+              <i class="bi bi-check-lg"></i>
+              <strong><%= exp.position %></strong>
+            </h5>
+            <small class="text-muted">
+              <%= exp.start_date.strftime("%b %Y") %> -
+              <%= exp.current ? "Present" : exp.end_date&.strftime("%b %Y") %>
+            </small>
+          </div>
+
+          <p class="text-muted mb-1">
+            <%= exp.company_name %> — <%= exp.location %>
+          </p>
+
+          <ul>
+            <% exp.experience_items.each do |item| %>
+              <li><%= item.content %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- PROJECTS -->
+      <h3 class="text-white text-uppercase p-4 bg-dark">Projects</h3>
+
+      <% @projects.each do |project| %>
+        <div class="mb-3">
+          <h5><%= project.name %></h5>
+          <p><%= project.description %></p>
+
+          <% if project.github_url.present? %>
+            <a href="<%= project.github_url %>" target="_blank">GitHub</a>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- CERTIFICATES -->
+      <h3 class="text-white text-uppercase p-4 bg-dark">Certificates</h3>
+
+      <% @certificates.each do |cert| %>
+        <p>
+          <strong><%= cert.name %></strong> — <%= cert.provider %>
+          (<%= cert.issue_date.year %>)
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>

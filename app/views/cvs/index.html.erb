@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <h1 class="mb-4">CVs</h1>
+
+  <div class="row">
+    <% @profiles.each do |profile| %>
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-body">
+
+            <h4><%= profile.full_name %></h4>
+            <p class="text-muted"><%= profile.title %></p>
+
+            <p>
+              <strong>Email:</strong><br>
+              <%= profile.email %>
+            </p>
+
+            <p>
+              <strong>Location:</strong><br>
+              <%= profile.location %>
+            </p>
+
+            <div class="d-flex justify-content-between">
+              <a href="<%= cv_path(profile.id) %>" class="btn btn-dark">View CV</a>
+              <%= link_to "Download PDF", cv_path(profile, format: :pdf), class: "btn btn-dark"%>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

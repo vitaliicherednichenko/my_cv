@@ -1,0 +1,52 @@
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - tmp/**/*
+    - bin/**/*
+    - db/**/*
+    - db/schema.rb
+    - config/**/*
+    - config.ru
+    - lib/**/*
+
+Metrics/AbcSize:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+    - spec/**/*
+
+Metrics/ClassLength:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/RedundantConstantBase:
+  Enabled: false
+
+
+
