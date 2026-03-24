@@ -40,6 +40,10 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
+ENV RAILS_ENV=production
+ENV SECRET_KEY_BASE=dummy_secret
+ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+
 RUN bundle exec rails assets:precompile
 
 # Final stage for app image
