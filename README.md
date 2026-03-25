@@ -48,15 +48,19 @@ The admin panel will be accessible at http://localhost:3000/admin.
 ```
 GET	/admin	List of all editing models
 ```
+![admin](app/assets/images/admin.png)
 ```
 GET	/cvs	List all profiles
 ```
+![cvs](app/assets/images/cvs.png)
 ```
 GET	/cvs/:id	View a profile resume (HTML)
 ```
+![cv](app/assets/images/cv.png)
 ```
 GET	/cvs/:id.pdf	Download a profile resume as PDF Generation (CvPdf)
 ```
+![cv_pdf](app/assets/images/cv_pdf.png)
 
 The CvPdf class (in app/pdfs/cv_pdf.rb) handles PDF resume generation:
 
@@ -97,3 +101,19 @@ Profile.create!(
   linkedin_url: 'https://linkedin.com/in/johndoe'
 )
 ```
+
+## What's Next
+
+Planned improvements for the CVsApp include:
+
+1. **Adding Images to CVs**  
+   - Allow users to upload profile pictures or other images.  
+   - Ensure images display correctly in both HTML and PDF resumes.
+
+2. **Adding Data via Pop-up Forms**  
+   - Implement dynamic pop-up forms for adding or editing CV sections.  
+   - Improve user experience by enabling in-place updates without navigating to separate pages.
+
+3. **I18n Translations**  
+   - Introduce internationalization (I18n) to support multiple languages.  
+   - Make the application accessible to users in different regions with localized UI and CV content.

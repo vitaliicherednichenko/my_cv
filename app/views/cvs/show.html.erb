@@ -12,11 +12,21 @@
       <h3 class="text-uppercase mt-5">Contact</h3>
       <hr class="bg-light" style="height: 5px;">
       <div>
-        <p><i class="bi bi-telephone"></i> &nbsp; <%= @profile.phone %></p>
-        <p><i class="bi bi-envelope-open"></i> &nbsp; <%= @profile.email %></p>
-        <p><i class="bi bi-pin-map"></i> &nbsp; <%= @profile.location %></p>
-        <p><i class="bi bi-github"></i> &nbsp; <%= @profile.github_url %></p>
-        <p><i class="bi bi-linkedin"></i> &nbsp; <%= @profile.linkedin_url %></p>
+        <% if @profile.phone %>
+          <p><i class="bi bi-telephone"></i> &nbsp; <%= @profile.phone %></p>
+        <% end %>
+        <% if @profile.email %>
+          <p><i class="bi bi-envelope-open"></i> &nbsp; <%= @profile.email %></p>
+        <% end %>
+        <% if @profile.location %>
+          <p><i class="bi bi-pin-map"></i> &nbsp; <%= @profile.location %></p>
+        <% end %>
+        <% if @profile.github_url %>
+          <p><i class="bi bi-github"></i> &nbsp; <%= @profile.github_url %></p>
+        <% end %>
+        <% if @profile.linkedin_url %>
+          <p><i class="bi bi-linkedin"></i> &nbsp; <%= @profile.linkedin_url %></p>
+        <% end %>
       </div>
 
       <!-- PROFILE -->
@@ -38,12 +48,14 @@
         </div>
       <% end %>
 
-      <!-- LANGUAGES -->
-      <h3 class="text-uppercase mt-5">Languages</h3>
-      <hr class="bg-light" style="height: 5px;">
+      <% if @languages.any? %>
+        <!-- LANGUAGES -->
+        <h3 class="text-uppercase mt-5">Languages</h3>
+        <hr class="bg-light" style="height: 5px;">
 
-      <% @languages.each do |lang| %>
-        <p><%= lang.name %> — <%= lang.level %></p>
+        <% @languages.each do |lang| %>
+          <p><%= lang.name %> — <%= lang.level %></p>
+        <% end %>
       <% end %>
 
       <!-- EDUCATION -->
@@ -93,28 +105,32 @@
         </div>
       <% end %>
 
-      <!-- PROJECTS -->
-      <h3 class="text-white text-uppercase p-4 bg-dark">Projects</h3>
+      <% if @projects.any? %>
+        <!-- PROJECTS -->
+        <h3 class="text-white text-uppercase p-4 bg-dark">Projects</h3>
 
-      <% @projects.each do |project| %>
-        <div class="mb-3">
-          <h5><%= project.name %></h5>
-          <p><%= project.description %></p>
+        <% @projects.each do |project| %>
+          <div class="mb-3">
+            <h5><%= project.name %></h5>
+            <p><%= project.description %></p>
 
-          <% if project.github_url.present? %>
-            <a href="<%= project.github_url %>" target="_blank">GitHub</a>
-          <% end %>
-        </div>
+            <% if project.github_url.present? %>
+              <a href="<%= project.github_url %>" target="_blank">GitHub</a>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
 
-      <!-- CERTIFICATES -->
-      <h3 class="text-white text-uppercase p-4 bg-dark">Certificates</h3>
+      <% if @certificates.any? %>
+        <!-- CERTIFICATES -->
+        <h3 class="text-white text-uppercase p-4 bg-dark">Certificates</h3>
 
-      <% @certificates.each do |cert| %>
-        <p>
-          <strong><%= cert.name %></strong> — <%= cert.provider %>
-          (<%= cert.issue_date.year %>)
-        </p>
+        <% @certificates.each do |cert| %>
+          <p>
+            <strong><%= cert.name %></strong> — <%= cert.provider %>
+            (<%= cert.issue_date.year %>)
+          </p>
+        <% end %>
       <% end %>
     </div>
   </div>

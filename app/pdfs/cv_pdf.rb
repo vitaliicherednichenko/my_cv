@@ -68,11 +68,11 @@ class CvPdf < Prawn::Document
         end
 
         sidebar_section('CONTACT') do
-          icon_text('phone', @profile.phone)
-          icon_text('email', @profile.email)
-          icon_text('pin_drop', @profile.location)
-          icon_text('github', @profile.github_url)
-          icon_text('linkedin', @profile.linkedin_url)
+          icon_text('phone', @profile.phone) if @profile.phone.present?
+          icon_text('email', @profile.email) if @profile.email.present?
+          icon_text('pin_drop', @profile.location) if @profile.location.present?
+          icon_text('github', @profile.github_url) if @profile.github_url
+          icon_text('linkedin', @profile.linkedin_url) if @profile.linkedin_url.present?
         end
 
         sidebar_section('SKILLS') do
@@ -92,9 +92,11 @@ class CvPdf < Prawn::Document
           end
         end
 
-        sidebar_section('LANGUAGES') do
-          @profile.languages.each do |lang|
-            text "#{lang.name} — #{lang.level}", size: 9
+        if @profile.languages.any?
+          sidebar_section('LANGUAGES') do
+            @profile.languages.each do |lang|
+              text "#{lang.name} — #{lang.level}", size: 9
+            end
           end
         end
 
@@ -131,7 +133,7 @@ class CvPdf < Prawn::Document
         move_down 12
       end
 
-      section_title('CERTIFICATES')
+      section_title('CERTIFICATES') if @profile.certificates.any?
       @profile.certificates.each do |cert|
         text "#{cert.name} — #{cert.provider} — #{cert.issue_date.strftime('%b %Y')}",
              size: 10, color: '555555'
