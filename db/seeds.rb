@@ -10,9 +10,7 @@ Certificate.destroy_all
 Project.destroy_all
 Profile.destroy_all
 
-if Rails.env.development?
-  User.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
-end
+User.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 
 profile = Profile.create!(
   full_name: 'Vitalii Cherednichenko',
