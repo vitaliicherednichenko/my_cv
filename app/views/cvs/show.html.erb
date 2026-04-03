@@ -1,15 +1,23 @@
 <div class="container">
   <div class="row min-vh-100">
 
-    <div class="text-center text-white text-uppercase py-5 bg-dark">
+
+    <div class="text-center text-white text-uppercase py-3 bg-dark">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#headerModal">Edit</button>
+      </div>
       <h1 class="mb-3"><%= @profile.full_name %></h1>
       <h2><%= @profile.title %></h2>
     </div>
 
     <!-- LEFT SIDEBAR -->
     <div class="col-md-4 text-white left-sidebar">
-
-      <h3 class="text-uppercase mt-5">Contact</h3>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <h3 class="text-uppercase mb-0">Contact</h3>
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#contactModal">
+          Edit
+        </button>
+      </div>
       <hr class="bg-light" style="height: 5px;">
       <div>
         <% if @profile.phone %>
@@ -30,13 +38,23 @@
       </div>
 
       <!-- PROFILE -->
-      <h3 class="text-uppercase mt-5">Profile</h3>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <h3 class="text-uppercase mb-0">Profile</h3>
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#profileModal">
+          Edit
+        </button>
+      </div>
       <hr class="bg-light" style="height: 5px;">
 
       <p><%= @profile.summary %></p>
 
       <!-- SKILLS -->
-      <h3 class="text-uppercase mt-5">Skills</h3>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <h3 class="text-uppercase mb-0">Skills</h3>
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#skillsModal">
+          Edit
+        </button>
+      </div>
       <hr class="bg-light" style="height: 5px;">
 
       <% @skills.each do |skill| %>
@@ -50,28 +68,18 @@
 
       <% if @languages.any? %>
         <!-- LANGUAGES -->
-        <h3 class="text-uppercase mt-5">Languages</h3>
+        <div class="d-flex justify-content-between align-items-center mt-5">
+          <h3 class="text-uppercase mb-0">Languages</h3>
+          <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#languagesModal">
+            Edit
+          </button>
+        </div>
         <hr class="bg-light" style="height: 5px;">
 
         <% @languages.each do |lang| %>
           <p><%= lang.name %> — <%= lang.level %></p>
         <% end %>
       <% end %>
-
-      <!-- EDUCATION -->
-      <h3 class="text-uppercase mt-5">Education</h3>
-      <hr class="bg-light" style="height: 5px;">
-
-      <% @educations.each do |edu| %>
-        <p>
-          <strong><%= edu.institution %></strong><br>
-          <%= edu.degree %> — <%= edu.location %><br>
-          <small>
-            <%= edu.start_date.year %> - <%= edu.end_date.year %>
-          </small>
-        </p>
-      <% end %>
-
     </div>
 
     <!-- RIGHT CONTENT -->
@@ -93,9 +101,12 @@
             </small>
           </div>
 
-          <p class="text-muted mb-1">
-            <%= exp.company_name %> — <%= exp.location %>
-          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="text-muted mb-1"><%= exp.company_name %> — <%= exp.location %></p>
+            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#experienceModal-<%= exp.id %>">
+              Edit
+            </button>
+          </div>
 
           <ul>
             <% exp.experience_items.each do |item| %>
@@ -132,6 +143,29 @@
           </p>
         <% end %>
       <% end %>
+
+      <% if @educations.any? %>
+        <!-- EDUCATION -->
+        <h3 class="text-white text-uppercase p-4 bg-dark">Education</h3>
+
+        <% @educations.each do |edu| %>
+          <p>
+            <strong><%= edu.institution %></strong><br>
+            <%= edu.degree %> — <%= edu.location %><br>
+            <small>
+              <%= edu.start_date.year %> - <%= edu.end_date.year %>
+            </small>
+          </p>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
+
+<%= render "modal/header", profile: @profile %>
+<%= render "modal/contact", profile: @profile %>
+<%= render "modal/profile", profile: @profile %>
+<%= render "modal/skills", profile: @profile %>
+<% @experiences.each do |exp| %>
+  <%= render "modal/experience", profile: @profile, experience: exp %>
+<% end %>

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   get 'up' => 'rails/health#show', as: :rails_health_check
 
-  resources :cvs, only: %i[index show]
+  resources :cvs, only: %i[index show update]
 
   root 'cvs#index'
 end

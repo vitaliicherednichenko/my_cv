@@ -1,0 +1,64 @@
+<div class="modal fade" id="experienceModal-<%= experience.id %>" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Experience</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <%= form_with model: @profile, url: cv_path(@profile), method: :patch do |f| %>
+
+          <%= f.fields_for :experiences, experience do |ef| %>
+
+            <%= ef.hidden_field :id %>
+
+            <div class="mb-2">
+              <%= ef.text_field :position, class: "form-control", placeholder: "Position" %>
+            </div>
+
+            <div class="mb-2">
+              <%= ef.text_field :company_name, class: "form-control", placeholder: "Company" %>
+            </div>
+
+            <div class="mb-2">
+              <%= ef.text_field :location, class: "form-control", placeholder: "Location" %>
+            </div>
+
+            <div class="row mb-2">
+              <div class="col">
+                <%= ef.date_field :start_date, class: "form-control" %>
+              </div>
+              <div class="col">
+                <%= ef.date_field :end_date, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="form-check mb-3">
+              <%= ef.check_box :current %>
+              <%= ef.label :current, "Current job" %>
+            </div>
+
+            <!-- EXPERIENCE ITEMS -->
+            <h6>Responsibilities</h6>
+
+            <%= ef.fields_for :experience_items do |item_f| %>
+              <div class="d-flex mb-2">
+                <%= item_f.text_field :content, class: "form-control me-2" %>
+                <%= item_f.check_box :_destroy %>
+              </div>
+            <% end %>
+
+          <% end %>
+
+          <div class="text-end mt-3">
+            <%= f.submit "Save", class: "btn btn-dark" %>
+          </div>
+
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

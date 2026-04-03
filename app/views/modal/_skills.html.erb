@@ -1,0 +1,34 @@
+<div class="modal fade" id="skillsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Skills</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <%= form_with model: @profile, url: cv_path(@profile), method: :patch do |f| %>
+
+          <%= f.fields_for :skills do |sf| %>
+            <div class="row mb-2">
+              <div class="col">
+                <%= sf.text_field :name, class: "form-control", placeholder: "Skill" %>
+              </div>
+              <div class="col">
+                <%= sf.number_field :level, class: "form-control", placeholder: "%" %>
+              </div>
+              <div class="col-auto">
+                <%= sf.check_box :_destroy %> Remove
+              </div>
+            </div>
+          <% end %>
+
+          <div class="text-end mt-3">
+            <%= f.submit "Save", class: "btn btn-dark" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

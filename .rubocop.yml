@@ -22,6 +22,10 @@ Metrics/BlockLength:
     - app/pdfs/cv_pdf.rb
     - spec/**/*
 
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+
 Metrics/ClassLength:
   Exclude:
     - app/pdfs/cv_pdf.rb
@@ -30,11 +34,19 @@ Metrics/MethodLength:
   Exclude:
     - app/pdfs/cv_pdf.rb
 
+Metrics/PerceivedComplexity:
+  Exclude:
+    - app/pdfs/cv_pdf.rb
+
 Rails/HasManyOrHasOneDependent:
   Enabled: false
 
 Rails/HelperInstanceVariable:
   Enabled: false
+
+Rails/I18nLocaleTexts:
+  Exclude:
+    - app/controllers/cvs_controller.rb
 
 Style/ClassAndModuleChildren:
   Enabled: false

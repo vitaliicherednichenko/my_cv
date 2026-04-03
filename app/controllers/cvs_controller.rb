@@ -17,6 +17,16 @@ class CvsController < ApplicationController
     respond_show
   end
 
+  def update
+    @profile = Profile.find(params[:id])
+
+    if @profile.update(profile_params)
+      redirect_to cv_path(params[:id]), notice: 'Updated successfully'
+    else
+      render :show
+    end
+  end
+
   private
 
   def respond_show
@@ -27,5 +37,18 @@ class CvsController < ApplicationController
         send_data pdf.render, filename: 'cv.pdf', type: 'application/pdf', disposition: 'inline'
       end
     end
+  end
+
+  def profile_params
+    params.require(:profile).permit(
+      :full_name, :title, :summary, :phone, :email, :location, :github_url, :linkedin_url,
+      skills_attributes: %i[id name level _destroy], languages_attributes: %i[id name level _destroy],
+      educations_attributes: %i[id degree institution location start_date end_date _destroy],
+      certificates_attributes: %i[id name provider issue_date _destroy],
+      projects_attributes: %i[id name description github_url live_url _destroy],
+
+      experiences_attributes: [:id, :position, :company_name, :location, :start_date, :end_date, :current, :_destroy,
+                               { experience_items_attributes: %i[id content _destroy] }]
+    )
   end
 end

@@ -51,18 +51,16 @@ class CvPdf < Prawn::Document
   def draw_sidebar(top)
     bounding_box([0, top], width: SIDEBAR_WIDTH, height: bounds.height - 45) do
       fill_color '325e7e'
-      fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height
+      fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height - 45
       fill_color 'FFFFFF'
 
       padding = 10
 
       bounding_box(
-        [padding, top - padding],
+        [padding, top],
         width: SIDEBAR_WIDTH - (padding * 2),
         height: bounds.height - (padding * 2)
       ) do
-        move_down 10
-
         sidebar_section('PROFILE') do
           text @profile.summary.to_s, size: 9, leading: 2
         end
@@ -99,15 +97,6 @@ class CvPdf < Prawn::Document
             end
           end
         end
-
-        sidebar_section('EDUCATION') do
-          @profile.educations.each do |edu|
-            text edu.degree.to_s, style: :bold, size: 10
-            text "#{edu.institution}, #{edu.location}", size: 9
-            text "#{edu.start_date.year} - #{edu.end_date.year}", size: 9
-            move_down 10
-          end
-        end
       end
     end
   end
@@ -133,11 +122,30 @@ class CvPdf < Prawn::Document
         move_down 12
       end
 
+      ensure_space(150)
       section_title('CERTIFICATES') if @profile.certificates.any?
       @profile.certificates.each do |cert|
         text "#{cert.name} — #{cert.provider} — #{cert.issue_date.strftime('%b %Y')}",
              size: 10, color: '555555'
       end
+      move_down 12
+
+      ensure_space(150)
+      section_title('PROJECTS') if @profile.projects.any?
+      @profile.projects.each do |project|
+        text project.name.to_s, style: :bold, size: 11
+        text project.description.to_s, size: 11, color: '555555'
+        text project.github_url.to_s, size: 10, color: '555555'
+        text project.live_url.to_s, size: 10, color: '555555'
+      end
+
+      section_title('EDUCATION') if @profile.educations.any?
+      @profile.educations.each do |edu|
+        text edu.degree.to_s, style: :bold, size: 10, color: '555555'
+        text "#{edu.institution}, #{edu.location}", size: 9, color: '555555'
+        text "#{edu.start_date.year} - #{edu.end_date.year}", size: 9, color: '555555'
+      end
+      move_down 12
     end
   end
 
@@ -195,6 +203,24 @@ class CvPdf < Prawn::Document
     from = exp.start_date&.strftime('%b %Y')
     to = exp.current ? 'Present' : exp.end_date&.strftime('%b %Y')
     "#{from} - #{to}"
+  end
+
+  def ensure_space(min_height)
+    start_new_cv_page if cursor < min_height
+  end
+
+  def start_new_cv_page
+    start_new_page
+    top = cursor
+    draw_empty_sidebar(top)
+    self.y = top + 185
+  end
+
+  def draw_empty_sidebar(top)
+    bounding_box([-225, top + 145], width: SIDEBAR_WIDTH, height: bounds.height + 100) do
+      fill_color '325e7e'
+      fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height
+    end
   end
 
   def setup_fonts
