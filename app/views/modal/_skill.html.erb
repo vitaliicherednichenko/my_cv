@@ -18,8 +18,21 @@
               <div class="col">
                 <%= sf.number_field :level, class: "form-control", placeholder: "%" %>
               </div>
-              <div class="col-auto">
+              <div class="col-auto text-danger">
                 <%= sf.check_box :_destroy %> Remove
+              </div>
+            </div>
+          <% end %>
+
+          <h6 class="mt-3">Add new skill</h6>
+
+          <%= f.fields_for :skills, Skill.new do |sf| %>
+            <div class="row mb-2">
+              <div class="col">
+                <%= sf.text_field :name, class: "form-control", placeholder: "New skill" %>
+              </div>
+              <div class="col">
+                <%= sf.number_field :level, class: "form-control", placeholder: "%" %>
               </div>
             </div>
           <% end %>

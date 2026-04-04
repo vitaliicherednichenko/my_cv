@@ -1,0 +1,33 @@
+<%= form_with model: profile, url: cv_path(profile), method: :patch, local: true do |f| %>
+
+  <%= f.fields_for :certificates, certificate do |cf| %>
+
+    <%= cf.hidden_field :id if certificate.persisted? %>
+
+    <div class="mb-2">
+      <%= cf.label :name %>
+      <%= cf.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= cf.label :provider %>
+      <%= cf.text_field :provider, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= cf.label :issue_date %>
+      <%= cf.date_field :issue_date, class: "form-control" %>
+    </div>
+
+    <% if certificate.persisted? %>
+      <div class="mb-2 text-danger">
+        <%= cf.check_box :_destroy %> Remove Certificate
+      </div>
+    <% end %>
+
+  <% end %>
+
+  <%= f.submit certificate.persisted? ? "Update" : "Create",
+               class: "btn btn-dark w-100 mt-3" %>
+
+<% end %>

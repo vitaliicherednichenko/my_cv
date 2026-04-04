@@ -1,0 +1,68 @@
+<%= form_with model: profile, url: cv_path(profile), method: :patch, local: true do |f| %>
+
+  <%= f.fields_for :experiences, experience do |ef| %>
+
+    <%= ef.hidden_field :id if experience.persisted? %>
+
+    <div class="mb-2">
+      <%= ef.label :position %>
+      <%= ef.text_field :position, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= ef.label :company_name %>
+      <%= ef.text_field :company_name, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= ef.label :location %>
+      <%= ef.text_field :location, class: "form-control" %>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <%= ef.label :start_date %>
+        <%= ef.date_field :start_date, class: "form-control" %>
+      </div>
+
+      <div class="col">
+        <%= ef.label :end_date %>
+        <%= ef.date_field :end_date, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-check mb-3">
+      <%= ef.check_box :current %>
+      <%= ef.label :current, "Current job" %>
+    </div>
+
+    <!-- EXPERIENCE ITEMS -->
+    <h6>Responsibilities</h6>
+
+    <%= ef.fields_for :experience_items do |item_f| %>
+      <div class="d-flex mb-2">
+        <%= item_f.text_field :content, class: "form-control me-2" %>
+        <%= item_f.check_box :_destroy %>
+      </div>
+    <% end %>
+
+    <% if experience.experience_items.empty? %>
+      <%= ef.fields_for :experience_items, ExperienceItem.new do |item_f| %>
+        <div class="d-flex mb-2">
+          <%= item_f.text_field :content, class: "form-control" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if experience.persisted? %>
+      <div class="mb-2 text-danger">
+        <%= ef.check_box :_destroy %> Remove Experience
+      </div>
+    <% end %>
+
+  <% end %>
+
+  <%= f.submit experience.persisted? ? "Update" : "Create",
+               class: "btn btn-dark w-100 mt-3" %>
+
+<% end %>

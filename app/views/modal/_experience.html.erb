@@ -15,22 +15,27 @@
             <%= ef.hidden_field :id %>
 
             <div class="mb-2">
+              <%= ef.label :position %>
               <%= ef.text_field :position, class: "form-control", placeholder: "Position" %>
             </div>
 
             <div class="mb-2">
+              <%= ef.label :company_name %>
               <%= ef.text_field :company_name, class: "form-control", placeholder: "Company" %>
             </div>
 
             <div class="mb-2">
+              <%= ef.label :location %>
               <%= ef.text_field :location, class: "form-control", placeholder: "Location" %>
             </div>
 
             <div class="row mb-2">
               <div class="col">
+                <%= ef.label :start_date %>
                 <%= ef.date_field :start_date, class: "form-control" %>
               </div>
               <div class="col">
+                <%= ef.label :end_date %>
                 <%= ef.date_field :end_date, class: "form-control" %>
               </div>
             </div>
@@ -41,7 +46,10 @@
             </div>
 
             <!-- EXPERIENCE ITEMS -->
-            <h6>Responsibilities</h6>
+            <div class="d-flex justify-content-between align-items-center">
+              <h6>Responsibilities</h6>
+              <small class="text-danger">Remove</small>
+            </div>
 
             <%= ef.fields_for :experience_items do |item_f| %>
               <div class="d-flex mb-2">
@@ -50,6 +58,9 @@
               </div>
             <% end %>
 
+            <div class="mb-2 text-danger">
+              <%= ef.check_box :_destroy %> Remove Experience
+            </div>
           <% end %>
 
           <div class="text-end mt-3">

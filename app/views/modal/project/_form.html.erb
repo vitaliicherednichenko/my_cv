@@ -1,0 +1,38 @@
+<%= form_with model: profile, url: cv_path(profile), method: :patch, local: true do |f| %>
+
+  <%= f.fields_for :projects, project do |pf| %>
+
+    <%= pf.hidden_field :id if project.persisted? %>
+
+    <div class="mb-2">
+      <%= pf.label :name %>
+      <%= pf.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= pf.label :description %>
+      <%= pf.text_area :description, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= pf.label :github_url %>
+      <%= pf.text_field :github_url, class: "form-control" %>
+    </div>
+
+    <div class="mb-2">
+      <%= pf.label :live_url %>
+      <%= pf.text_field :live_url, class: "form-control" %>
+    </div>
+
+    <% if project.persisted? %>
+      <div class="mb-2 text-danger">
+        <%= pf.check_box :_destroy %> Remove Project
+      </div>
+    <% end %>
+
+  <% end %>
+
+  <%= f.submit project.persisted? ? "Update" : "Create",
+               class: "btn btn-dark w-100 mt-3" %>
+
+<% end %>
