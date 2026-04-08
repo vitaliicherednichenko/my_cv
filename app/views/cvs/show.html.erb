@@ -3,6 +3,10 @@
 
 
     <div class="text-center text-white text-uppercase py-3 bg-dark">
+      <button data-bs-toggle="modal" data-bs-target="#headerStyleModal">Header Style</button>
+      <button data-bs-toggle="modal" data-bs-target="#sidebarStyleModal">Sidebar Style</button>
+      <button data-bs-toggle="modal" data-bs-target="#mainStyleModal">Main Style</button>
+
       <div class="d-flex justify-content-end">
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#headerModal">Edit</button>
       </div>
@@ -222,6 +226,10 @@
     </div>
   </div>
 </div>
+
+<%= render "modal/header_style", profile: @profile %>
+<%= render "modal/sidebar_style", profile: @profile %>
+<%= render "modal/main_style", profile: @profile %>
 
 <%= render "modal/header", profile: @profile %>
 <%= render "modal/contact", profile: @profile %>

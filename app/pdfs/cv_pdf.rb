@@ -17,42 +17,43 @@ class CvPdf < Prawn::Document
   # LAYOUT
   # -----------------------
   def draw_layout
-    draw_header
+    draw_header(@profile)
     top = cursor
 
-    draw_sidebar(top)
-    draw_main(top)
+    draw_sidebar(top, @profile)
+    draw_main(top, @profile)
   end
 
-  def draw_header
+  def draw_header(profile)
     height = 100
     y = cursor
 
-    fill_color '555555'
+    fill_color profile.header_style.bg_color.remove('#')
     fill_rectangle [0, y], bounds.width, height
 
-    fill_color 'FFFFFF'
+    fill_color profile.header_style.text_color.remove('#')
 
     padding_x = 15
     padding_y = 25
 
     bounding_box([padding_x, y - padding_y], width: bounds.width - (padding_x * 2)) do
-      text @profile.full_name.to_s.upcase, size: 22, style: :bold
+      text profile.full_name.to_s.upcase, size: profile.header_style.font_size,
+                                          style: (profile.header_style.bold ? :bold : :normal)
 
       move_down 5
 
-      text @profile.title.to_s.upcase, size: 18, color: 'DDDDDD'
+      text profile.title.to_s.upcase, size: 18, color: 'DDDDDD'
     end
   end
 
   # -----------------------
   # SIDEBAR
   # -----------------------
-  def draw_sidebar(top)
+  def draw_sidebar(top, profile)
     bounding_box([0, top], width: SIDEBAR_WIDTH, height: bounds.height - 45) do
-      fill_color '325e7e'
+      fill_color profile.sidebar_style.bg_color.remove('#')
       fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height - 45
-      fill_color 'FFFFFF'
+      fill_color profile.sidebar_style.text_color.remove('#')
 
       padding = 10
 
@@ -61,20 +62,20 @@ class CvPdf < Prawn::Document
         width: SIDEBAR_WIDTH - (padding * 2),
         height: bounds.height - (padding * 2)
       ) do
-        sidebar_section('PROFILE') do
-          text @profile.summary.to_s, size: 9, leading: 2
+        sidebar_section('PROFILE', profile) do
+          text profile.summary.to_s, size: 9, leading: 2
         end
 
-        sidebar_section('CONTACT') do
-          icon_text('phone', @profile.phone) if @profile.phone.present?
-          icon_text('email', @profile.email) if @profile.email.present?
-          icon_text('pin_drop', @profile.location) if @profile.location.present?
-          icon_text('github', @profile.github_url) if @profile.github_url
-          icon_text('linkedin', @profile.linkedin_url) if @profile.linkedin_url.present?
+        sidebar_section('CONTACT', profile) do
+          icon_text('phone', profile.phone) if profile.phone.present?
+          icon_text('email', profile.email) if profile.email.present?
+          icon_text('pin_drop', profile.location) if profile.location.present?
+          icon_text('github', profile.github_url) if profile.github_url
+          icon_text('linkedin', profile.linkedin_url) if profile.linkedin_url.present?
         end
 
-        sidebar_section('SKILLS') do
-          @profile.skills.each do |skill|
+        sidebar_section('SKILLS', profile) do
+          profile.skills.each do |skill|
             text "• #{skill.name} #{skill.level}%", size: 9
 
             bar_width = 180.0
@@ -90,9 +91,9 @@ class CvPdf < Prawn::Document
           end
         end
 
-        if @profile.languages.any?
-          sidebar_section('LANGUAGES') do
-            @profile.languages.each do |lang|
+        if profile.languages.any?
+          sidebar_section('LANGUAGES', profile) do
+            profile.languages.each do |lang|
               text "#{lang.name} — #{lang.level}", size: 9
             end
           end
@@ -104,11 +105,11 @@ class CvPdf < Prawn::Document
   # -----------------------
   # MAIN CONTENT
   # -----------------------
-  def draw_main(top)
+  def draw_main(top, profile)
     bounding_box([SIDEBAR_WIDTH + GUTTER, top - 25], width: bounds.width - SIDEBAR_WIDTH - GUTTER) do
-      section_title('EXPERIENCE')
+      section_title('EXPERIENCE', profile)
 
-      @profile.experiences.order(start_date: :desc).each do |exp|
+      profile.experiences.order(start_date: :desc).each do |exp|
         text exp.position.to_s, style: :bold, size: 11, color: '555555'
         text "#{exp.company_name}, #{exp.location}", size: 10, color: '555555'
         text date_range(exp), size: 9, color: '999999'
@@ -123,24 +124,24 @@ class CvPdf < Prawn::Document
       end
 
       ensure_space(150)
-      section_title('CERTIFICATES') if @profile.certificates.any?
-      @profile.certificates.each do |cert|
+      section_title('CERTIFICATES', profile) if profile.certificates.any?
+      profile.certificates.each do |cert|
         text "#{cert.name} — #{cert.provider} — #{cert.issue_date.strftime('%b %Y')}",
              size: 10, color: '555555'
       end
       move_down 12
 
       ensure_space(150)
-      section_title('PROJECTS') if @profile.projects.any?
-      @profile.projects.each do |project|
+      section_title('PROJECTS', profile) if profile.projects.any?
+      profile.projects.each do |project|
         text project.name.to_s, style: :bold, size: 11
         text project.description.to_s, size: 11, color: '555555'
         text project.github_url.to_s, size: 10, color: '555555'
         text project.live_url.to_s, size: 10, color: '555555'
       end
 
-      section_title('EDUCATION') if @profile.educations.any?
-      @profile.educations.each do |edu|
+      section_title('EDUCATION', profile) if profile.educations.any?
+      profile.educations.each do |edu|
         text edu.degree.to_s, style: :bold, size: 10, color: '555555'
         text "#{edu.institution}, #{edu.location}", size: 9, color: '555555'
         text "#{edu.start_date.year} - #{edu.end_date.year}", size: 9, color: '555555'
@@ -152,9 +153,9 @@ class CvPdf < Prawn::Document
   # -----------------------
   # HELPERS
   # -----------------------
-  def sidebar_section(title)
+  def sidebar_section(title, profile)
     move_down 15
-    text title, size: 14, style: :bold, color: 'FFFFFF'
+    text title, size: 14, style: (profile.header_style.bold ? :bold : :normal)
     stroke_color 'FFFFFF'
     line_width 2
     stroke_horizontal_rule
@@ -179,13 +180,13 @@ class CvPdf < Prawn::Document
     move_down 12
   end
 
-  def section_title(title)
+  def section_title(title, profile)
     move_down 10
 
     height = 20
     y = cursor
 
-    fill_color '555555'
+    fill_color profile.main_style.text_color.remove('#')
     fill_rectangle [0, y], bounds.width, height
     fill_color 'FFFFFF'
 

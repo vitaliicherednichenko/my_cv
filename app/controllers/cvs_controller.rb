@@ -39,7 +39,7 @@ class CvsController < ApplicationController
     end
   end
 
-  def profile_params
+  def profile_params # rubocop:disable Metrics/MethodLength
     params.require(:profile).permit(
       :full_name, :title, :summary, :phone, :email, :location, :github_url, :linkedin_url,
       skills_attributes: %i[id name level _destroy], languages_attributes: %i[id name level _destroy],
@@ -48,7 +48,10 @@ class CvsController < ApplicationController
       projects_attributes: %i[id name description github_url live_url _destroy],
 
       experiences_attributes: [:id, :position, :company_name, :location, :start_date, :end_date, :current, :_destroy,
-                               { experience_items_attributes: %i[id content _destroy] }]
+                               { experience_items_attributes: %i[id content _destroy] }],
+      header_style_attributes: %i[id bg_color text_color font_size bold],
+      sidebar_style_attributes: %i[id bg_color text_color font_size bold width],
+      main_style_attributes: %i[id bg_color text_color font_size bold]
     )
   end
 end

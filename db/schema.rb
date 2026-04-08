@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_22_112749) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_08_210627) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,18 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_22_112749) do
     t.index ["profile_id"], name: "index_experiences_on_profile_id"
   end
 
+  create_table "header_styles", force: :cascade do |t|
+    t.bigint "profile_id", null: false
+    t.string "bg_color"
+    t.string "text_color"
+    t.string "font"
+    t.integer "font_size"
+    t.boolean "bold"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_id"], name: "index_header_styles_on_profile_id"
+  end
+
   create_table "languages", force: :cascade do |t|
     t.string "name"
     t.string "level"
@@ -105,9 +117,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_22_112749) do
     t.index ["profile_id"], name: "index_languages_on_profile_id"
   end
 
+  create_table "main_styles", force: :cascade do |t|
+    t.bigint "profile_id", null: false
+    t.string "bg_color"
+    t.string "text_color"
+    t.string "font"
+    t.integer "font_size"
+    t.boolean "bold"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_id"], name: "index_main_styles_on_profile_id"
+  end
+
   create_table "profiles", force: :cascade do |t|
-    t.string "full_name"
-    t.string "title"
+    t.string "full_name", default: "Unknown", null: false
+    t.string "title", default: "Unknown", null: false
     t.string "phone"
     t.string "email"
     t.string "location"
@@ -127,6 +151,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_22_112749) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["profile_id"], name: "index_projects_on_profile_id"
+  end
+
+  create_table "sidebar_styles", force: :cascade do |t|
+    t.bigint "profile_id", null: false
+    t.string "bg_color"
+    t.string "text_color"
+    t.string "font"
+    t.integer "font_size"
+    t.boolean "bold"
+    t.integer "width"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_id"], name: "index_sidebar_styles_on_profile_id"
   end
 
   create_table "skills", force: :cascade do |t|
@@ -155,7 +192,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_22_112749) do
   add_foreign_key "educations", "profiles"
   add_foreign_key "experience_items", "experiences"
   add_foreign_key "experiences", "profiles"
+  add_foreign_key "header_styles", "profiles"
   add_foreign_key "languages", "profiles"
+  add_foreign_key "main_styles", "profiles"
   add_foreign_key "projects", "profiles"
+  add_foreign_key "sidebar_styles", "profiles"
   add_foreign_key "skills", "profiles"
 end

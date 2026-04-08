@@ -1,0 +1,43 @@
+<div class="modal fade" id="headerStyleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5>Edit Header Style</h5>
+      </div>
+
+      <div class="modal-body">
+        <%= form_with model: @profile, url: cv_path(@profile), method: :patch do |f| %>
+
+          <%= f.fields_for :header_style do |hs| %>
+
+            <div class="mb-2">
+              <%= hs.label :bg_color %>
+              <%= hs.color_field :bg_color, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= hs.label :text_color %>
+              <%= hs.color_field :text_color, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= hs.label :font_size %>
+              <%= hs.number_field :font_size, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= hs.label :bold %>
+              <%= hs.check_box :bold %>
+            </div>
+
+          <% end %>
+
+          <%= f.submit "Save", class: "btn btn-dark" %>
+
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

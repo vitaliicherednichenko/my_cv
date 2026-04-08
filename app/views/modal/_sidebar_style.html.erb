@@ -1,0 +1,48 @@
+<div class="modal fade" id="sidebarStyleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5>Edit Sidebar Style</h5>
+      </div>
+
+      <div class="modal-body">
+        <%= form_with model: @profile, url: cv_path(@profile), method: :patch do |f| %>
+
+          <%= f.fields_for :sidebar_style do |ss| %>
+
+            <div class="mb-2">
+              <%= ss.label :bg_color %>
+              <%= ss.color_field :bg_color, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= ss.label :text_color %>
+              <%= ss.color_field :text_color, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= ss.label :font_size %>
+              <%= ss.number_field :font_size, class: "form-control" %>
+            </div>
+
+            <div class="mb-2">
+              <%= ss.label :bold %>
+              <%= ss.check_box :bold %>
+            </div>
+
+            <div class="mb-2">
+              <%= ss.label :bold %>
+              <%= ss.number_field :width %>
+            </div>
+
+          <% end %>
+
+          <%= f.submit "Save", class: "btn btn-dark" %>
+
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
