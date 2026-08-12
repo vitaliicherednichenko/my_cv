@@ -1,21 +1,28 @@
 <div class="container">
   <div class="row min-vh-100">
 
-
-    <div class="text-center text-white text-uppercase py-3 bg-dark">
-      <button data-bs-toggle="modal" data-bs-target="#headerStyleModal">Header Style</button>
-      <button data-bs-toggle="modal" data-bs-target="#sidebarStyleModal">Sidebar Style</button>
-      <button data-bs-toggle="modal" data-bs-target="#mainStyleModal">Main Style</button>
-
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#headerModal">Edit</button>
+    <div class="text-uppercase py-3"
+         style="background-color: <%= @profile.header_style.bg_color %>; color: <%= @profile.header_style.text_color %>;">
+      <div class="d-flex justify-content-between align-items-center px-3">
+        <div>
+          <h1 class="mb-1"
+              style="font-size: <%= @profile.header_style.font_size %>px; font-weight: <%= @profile.header_style.bold ? 'bold' : 'normal' %>;">
+            <%= @profile.full_name %>
+          </h1>
+          <h2 style="opacity: 0.8;"><%= @profile.title %></h2>
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+          <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#headerStyleModal">Header Style</button>
+          <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#sidebarStyleModal">Sidebar Style</button>
+          <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#mainStyleModal">Main Style</button>
+          <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#headerModal">Edit</button>
+        </div>
       </div>
-      <h1 class="mb-3"><%= @profile.full_name %></h1>
-      <h2><%= @profile.title %></h2>
     </div>
 
     <!-- LEFT SIDEBAR -->
-    <div class="col-md-4 text-white left-sidebar">
+    <div class="col-md-4 left-sidebar"
+         style="background-color: <%= @profile.sidebar_style.bg_color %>; color: <%= @profile.sidebar_style.text_color %>; <%= "width: #{@profile.sidebar_style.width}px;" if @profile.sidebar_style.width.present? %>">
       <div class="d-flex justify-content-between align-items-center mt-5">
         <h3 class="text-uppercase mb-0">Contact</h3>
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#contactModal">
@@ -87,11 +94,13 @@
     </div>
 
     <!-- RIGHT CONTENT -->
-    <div class="col-md-8 p-5 pt-4">
+    <div class="col-md-8 p-5 pt-4"
+         style="background-color: <%= @profile.main_style.bg_color %>; color: <%= @profile.main_style.text_color %>;">
 
       <!-- EXPERIENCE -->
-      <div class="d-flex justify-content-between align-items-center bg-dark p-4 mb-2">
-        <h3 class="text-white text-uppercase mb-0">Experience</h3>
+      <div class="d-flex justify-content-between align-items-center p-4 mb-2"
+           style="background-color: <%= @profile.main_style.text_color %>; color: white;">
+        <h3 class="text-uppercase mb-0">Experience</h3>
 
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newExperienceModal">
           Add
@@ -135,8 +144,9 @@
       <% end %>
 
       <!-- PROJECTS -->
-      <div class="d-flex justify-content-between align-items-center bg-dark p-4 mb-2">
-        <h3 class="text-white text-uppercase mb-0">Projects</h3>
+      <div class="d-flex justify-content-between align-items-center p-4 mb-2"
+           style="background-color: <%= @profile.main_style.text_color %>; color: white;">
+        <h3 class="text-uppercase mb-0">Projects</h3>
 
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newProjectModal">
           Add
@@ -170,8 +180,9 @@
       <% end %>
 
       <!-- CERTIFICATES -->
-      <div class="d-flex justify-content-between align-items-center bg-dark p-4 mb-2">
-        <h3 class="text-white text-uppercase mb-0">Certificates</h3>
+      <div class="d-flex justify-content-between align-items-center p-4 mb-2"
+           style="background-color: <%= @profile.main_style.text_color %>; color: white;">
+        <h3 class="text-uppercase mb-0">Certificates</h3>
 
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newCertificateModal">
           Add
@@ -196,8 +207,9 @@
       <% end %>
 
       <!-- EDUCATION -->
-      <div class="d-flex justify-content-between align-items-center bg-dark p-4 mb-2">
-        <h3 class="text-white text-uppercase mb-0">Education</h3>
+      <div class="d-flex justify-content-between align-items-center p-4 mb-2"
+           style="background-color: <%= @profile.main_style.text_color %>; color: white;">
+        <h3 class="text-uppercase mb-0">Education</h3>
 
         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newEducationModal">
           Add

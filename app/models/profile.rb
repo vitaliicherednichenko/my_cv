@@ -23,7 +23,8 @@ class Profile < ApplicationRecord
   accepts_nested_attributes_for :main_style, allow_destroy: true
 
   validates :full_name, :title, presence: true
-  # validate :skills_count_within_limit
+  validates :summary, length: { maximum: 780 }
+  validate :skills_count_within_limit
 
   after_create :build_default_styles
 

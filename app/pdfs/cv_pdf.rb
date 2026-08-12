@@ -4,6 +4,20 @@ class CvPdf < Prawn::Document
   SIDEBAR_WIDTH = 200
   GUTTER = 20
 
+  # The main column starts below the header, which is only drawn on page one.
+  # Without this, Prawn keeps the box in the same place on every page and the
+  # content that flows over restarts with an empty band at the top.
+  module FlowFromPageTop
+    def move_past_bottom
+      pages_before = @document.page_count
+      super
+      @document.paint_sidebar_section_bg(@document.profile) if @document.page_count > pages_before
+      @document.y = @document.margin_box.absolute_top
+    end
+  end
+
+  attr_reader :profile
+
   def initialize(profile)
     super(page_size: 'A4', margin: 40)
 
@@ -21,6 +35,9 @@ class CvPdf < Prawn::Document
     top = cursor
 
     draw_sidebar(top, @profile)
+
+    go_to_page(1)
+    self.y = top
     draw_main(top, @profile)
   end
 
@@ -50,56 +67,76 @@ class CvPdf < Prawn::Document
   # SIDEBAR
   # -----------------------
   def draw_sidebar(top, profile)
-    bounding_box([0, top], width: SIDEBAR_WIDTH, height: bounds.height - 45) do
-      fill_color profile.sidebar_style.bg_color.remove('#')
-      fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height - 45
-      fill_color profile.sidebar_style.text_color.remove('#')
+    sidebar_bg = profile.sidebar_style.bg_color.remove('#')
+    sidebar_fg = profile.sidebar_style.text_color.remove('#')
+    padding = 10
 
-      padding = 10
+    fill_color sidebar_bg
+    fill_rectangle [0, top - 28], SIDEBAR_WIDTH, bounds.height - 45
 
-      bounding_box(
-        [padding, top],
-        width: SIDEBAR_WIDTH - (padding * 2),
-        height: bounds.height - (padding * 2)
-      ) do
-        sidebar_section('PROFILE', profile) do
-          text profile.summary.to_s, size: 9, leading: 2
+    fill_color sidebar_fg
+
+    bounding_box([padding, top - 28], width: SIDEBAR_WIDTH - (padding * 2)) do
+      sidebar_section('PROFILE', profile) do
+        text profile.summary.to_s, size: 9, leading: 2
+      end
+
+      sidebar_section('CONTACT', profile) do
+        icon_text('phone', profile.phone) if profile.phone.present?
+        icon_text('email', profile.email) if profile.email.present?
+        icon_text('pin_drop', profile.location) if profile.location.present?
+        icon_text('github', profile.github_url) if profile.github_url
+        icon_text('linkedin', profile.linkedin_url) if profile.linkedin_url.present?
+      end
+
+      sidebar_section('SKILLS', profile) do
+        profile.skills.each do |skill|
+          text "• #{skill.name} #{skill.level}%", size: 9
+
+          bar_width = 180.0
+          bar_height = 4.0
+          level_width = bar_width * skill.level / 100.0
+          y_position = cursor - 2
+
+          stroke_rectangle [bounds.left, y_position], bar_width, bar_height
+          fill_rectangle   [bounds.left, y_position], level_width, bar_height
+
+          move_down 10
         end
+      end
 
-        sidebar_section('CONTACT', profile) do
-          icon_text('phone', profile.phone) if profile.phone.present?
-          icon_text('email', profile.email) if profile.email.present?
-          icon_text('pin_drop', profile.location) if profile.location.present?
-          icon_text('github', profile.github_url) if profile.github_url
-          icon_text('linkedin', profile.linkedin_url) if profile.linkedin_url.present?
-        end
-
-        sidebar_section('SKILLS', profile) do
-          profile.skills.each do |skill|
-            text "• #{skill.name} #{skill.level}%", size: 9
-
-            bar_width = 180.0
-            bar_height = 4.0
-            level_width = bar_width * skill.level / 100.0
-            y_position = cursor - 2
-
-            stroke_rectangle [bounds.left, y_position], bar_width, bar_height
-
-            fill_rectangle [bounds.left, y_position], level_width, bar_height
-
-            move_down 10
-          end
-        end
-
-        if profile.languages.any?
-          sidebar_section('LANGUAGES', profile) do
-            profile.languages.each do |lang|
-              text "#{lang.name} — #{lang.level}", size: 9
-            end
+      if profile.languages.any?
+        advance_sidebar(languages_section_height(profile), profile)
+        sidebar_section('LANGUAGES', profile) do
+          profile.languages.each do |lang|
+            text "#{lang.name} — #{lang.level}", size: 9
           end
         end
       end
     end
+  end
+
+  def advance_sidebar(section_height, profile)
+    prev_page = page_number
+    ensure_space(section_height)
+    return if page_number == prev_page
+
+    paint_sidebar_section_bg(profile)
+  end
+
+  def paint_sidebar_section_bg(profile)
+    sidebar_bg = profile.sidebar_style.bg_color.remove('#')
+
+    save_graphics_state
+    canvas do
+      fill_color sidebar_bg
+      fill_rectangle([margin_box.absolute_left, margin_box.absolute_top], SIDEBAR_WIDTH, margin_box.height)
+    end
+    restore_graphics_state
+  end
+
+  def languages_section_height(profile)
+    50 + (profile.languages.count * 13) + 10
   end
 
   # -----------------------
@@ -107,6 +144,8 @@ class CvPdf < Prawn::Document
   # -----------------------
   def draw_main(top, profile)
     bounding_box([SIDEBAR_WIDTH + GUTTER, top - 25], width: bounds.width - SIDEBAR_WIDTH - GUTTER) do
+      bounds.extend(FlowFromPageTop)
+
       section_title('EXPERIENCE', profile)
 
       profile.experiences.order(start_date: :desc).each do |exp|
@@ -134,7 +173,7 @@ class CvPdf < Prawn::Document
       ensure_space(150)
       section_title('PROJECTS', profile) if profile.projects.any?
       profile.projects.each do |project|
-        text project.name.to_s, style: :bold, size: 11
+        text project.name.to_s, style: :bold, size: 11, color: '555555'
         text project.description.to_s, size: 11, color: '555555'
         text project.github_url.to_s, size: 10, color: '555555'
         text project.live_url.to_s, size: 10, color: '555555'
@@ -207,21 +246,16 @@ class CvPdf < Prawn::Document
   end
 
   def ensure_space(min_height)
-    start_new_cv_page if cursor < min_height
-  end
+    return if cursor >= min_height
 
-  def start_new_cv_page
-    start_new_page
-    top = cursor
-    draw_empty_sidebar(top)
-    self.y = top + 185
-  end
-
-  def draw_empty_sidebar(top)
-    bounding_box([-225, top + 145], width: SIDEBAR_WIDTH, height: bounds.height + 100) do
-      fill_color '325e7e'
-      fill_rectangle [0, top], SIDEBAR_WIDTH, bounds.height
+    if page_number < page_count
+      go_to_page(page_number + 1)
+    else
+      start_new_page
+      paint_sidebar_section_bg(@profile)
     end
+
+    self.y = margin_box.absolute_top
   end
 
   def setup_fonts
